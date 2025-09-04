@@ -1,22 +1,13 @@
-from test_harness.central_logger import CentralLogger
-from test_harness.udpcom_std import UDPCommStd
-from test_harness.udpcom_mp import UDPCommMP
-import logging
 import time
 import os
 import pprint
 import faulthandler
 faulthandler.enable()
-
-from test_harness.udpcom import UdpCom
+from udpcom import UdpCom
 
 REC_CAPACITY = 4000;
 
 if __name__ == "__main__":
-    central_logger = CentralLogger()
-    central_logger.start_listener()
-    central_logger.setup_logging(logging.INFO)
-    logger = logging.getLogger(__name__)
 
     pid = os.getpid()
     os.sched_setaffinity(pid, {0})
@@ -43,7 +34,7 @@ if __name__ == "__main__":
         next = next + t_delta_ns
         #print(i)
         sender.send_data(i.to_bytes(8, "little"), next)
-    logger.info("[sender]%s", sender.get_packet_stats())
+    print(f"[sender]{sender.get_packet_stats()}", )
     packet_id = 0
     n_stored_packets = 0
     try:
@@ -51,12 +42,8 @@ if __name__ == "__main__":
             data, ts = reciever.receive_data(int(100000))
             n_stored_packets = n_stored_packets + 1
             packet_id = int.from_bytes(data, "little")
-            #if prev_id != 0:
-            #    assert packet_id==prev_id+1, f"Packets should increase linearly, prev:{prev_id}!=this:{packet_id}"
-            #print(packet_id)
-            #prev_id = packet_id
     except TimeoutError:
-        logger.info("[reciever]timed out.")
+        print("[reciever]timed out.")
 
     time.sleep(0.2)
     t_end = time.monotonic_ns()
@@ -64,16 +51,13 @@ if __name__ == "__main__":
     n_packets_send = sender.get_packet_stats()['n_packets_sent']
     n_packets_ps = float(n_packets_send)/duration_s
     time.sleep(0.1)
-    #while not reciever.receive_empty():
-    #    pckt, ts = reciever.receive_data()
-    #    logger.info(f"[{ts}] Data: {pckt}")
 
     print("\n====================Sender===================")
     pprint.pp(sender.get_packet_stats())
     print("\n====================Reciever===================")
     pprint.pp(reciever.get_packet_stats())
-    logger.info("N packets/s=%f", n_packets_ps)
-    logger.info("N stored_packets=%d", n_stored_packets)
+    print(f"N packets/s={n_packets_ps}")
+    print(f"N stored_packets={n_stored_packets}")
 
     print("stopping")
     sender.stop()
@@ -81,5 +65,4 @@ if __name__ == "__main__":
     sender.close_socket() 
     print("closed")
     reciever.stop()
-    central_logger.shutdown()
 
