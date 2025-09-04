@@ -18,10 +18,32 @@ RtUDP (Real-Time UDP) is a Python extension module written in C that provides lo
 
 ## Installation
 
+### From Source (Recommended)
+
+#### Standard Installation
+Install the package in your Python environment:
+```bash
+pip install .
+```
+
+#### Development/Editable Installation
+For development, use an editable install that allows you to modify the code without reinstalling:
+```bash
+pip install -e .
+```
+
+#### Build from Source (Manual)
+If you prefer to build manually:
 ```bash
 make
 # or
 python setup.py build_ext --inplace
+```
+
+### From PyPI (Coming Soon)
+Once published to PyPI, you'll be able to install directly:
+```bash
+pip install rtudp
 ```
 
 ## Usage
