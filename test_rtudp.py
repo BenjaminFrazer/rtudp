@@ -3,7 +3,7 @@ import os
 import pprint
 import faulthandler
 faulthandler.enable()
-from udpcom import UdpCom
+from rtudp import RtUdp
 
 REC_CAPACITY = 4000;
 
@@ -11,8 +11,8 @@ if __name__ == "__main__":
 
     pid = os.getpid()
     os.sched_setaffinity(pid, {0})
-    sender = UdpCom("127.0.64.5", 3043,  "127.0.128.133", 8974, cpu=3, capacity=1000000, direction=0)
-    reciever = UdpCom("127.0.128.133", 8974, "127.0.64.5", 3043, cpu=2, capacity=REC_CAPACITY, direction=1)
+    sender = RtUdp("127.0.64.5", 3043,  "127.0.128.133", 8974, cpu=3, capacity=1000000, direction=0)
+    reciever = RtUdp("127.0.128.133", 8974, "127.0.64.5", 3043, cpu=2, capacity=REC_CAPACITY, direction=1)
     print(hash(sender))
     print(hash(reciever))
     sender.init_socket()

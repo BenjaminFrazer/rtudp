@@ -1,10 +1,10 @@
-# UDPCom
+# RtUDP
 
 A high-performance, deterministic UDP packet transmission framework with real-time capabilities and hardware timestamping support.
 
 ## Overview
 
-UDPCom is a Python extension module written in C that provides low-latency, deterministic UDP communication with features designed for real-time networking applications. It uses ring buffers, pthread workers, and CPU affinity to achieve predictable packet transmission timing.
+RtUDP (Real-Time UDP) is a Python extension module written in C that provides low-latency, deterministic UDP communication with features designed for real-time networking applications. It uses ring buffers, pthread workers, and CPU affinity to achieve predictable packet transmission timing.
 
 ## Features
 
@@ -27,13 +27,13 @@ python setup.py build_ext --inplace
 ## Usage
 
 ```python
-from udpcom import UdpCom
+from rtudp import RtUdp
 
 # Create sender and receiver instances
-sender = UdpCom("127.0.64.5", 3043, "127.0.128.133", 8974, 
-                cpu=3, capacity=1000000, direction=0)
-receiver = UdpCom("127.0.128.133", 8974, "127.0.64.5", 3043, 
-                  cpu=2, capacity=4000, direction=1)
+sender = RtUdp("127.0.64.5", 3043, "127.0.128.133", 8974, 
+               cpu=3, capacity=1000000, direction=0)
+receiver = RtUdp("127.0.128.133", 8974, "127.0.64.5", 3043, 
+                 cpu=2, capacity=4000, direction=1)
 
 # Initialize sockets
 sender.init_socket()

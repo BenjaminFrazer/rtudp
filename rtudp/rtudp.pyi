@@ -1,8 +1,8 @@
-# udpcom.pyi
+# rtudp.pyi
 
 from typing import Optional, Tuple, Dict
 
-class UdpCom:
+class RtUdp:
     def __init__(self,
                  local_ip: str,
                  local_port: int,

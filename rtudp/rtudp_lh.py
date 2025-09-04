@@ -1,4 +1,4 @@
-from .udpcom import UdpCom
+from .rtudp import RtUdp
 from typing import Optional, Tuple, Dict, Any
 
 def port_mapper(ip: str, port: int, source_prefix: str, target_prefix: str) -> Tuple[str, int]:
@@ -7,15 +7,15 @@ def port_mapper(ip: str, port: int, source_prefix: str, target_prefix: str) -> T
     ip_new = ip.replace(source_prefix, target_prefix, 1)
     return ip_new, port
 
-class UdpComLh():
-    _com: UdpCom
+class RtUdpLh():
+    _com: RtUdp
 
     def __init__(self, local_ip: str, local_port: int, remote_ip: str, remote_port: int, **kwargs):
 
         _REMOTE_IP_INTERNAL, _REMOTE_PORT_INTERNAL = port_mapper(remote_ip, remote_port, "125", "127")
         _LOCAL_IP_INTERNAL, _LOCAL_PORT_INTERNAL = port_mapper(local_ip, local_port, "125", "127")
 
-        self._com = UdpCom(_LOCAL_IP_INTERNAL, _LOCAL_PORT_INTERNAL, _REMOTE_IP_INTERNAL, _REMOTE_PORT_INTERNAL, **kwargs)
+        self._com = RtUdp(_LOCAL_IP_INTERNAL, _LOCAL_PORT_INTERNAL, _REMOTE_IP_INTERNAL, _REMOTE_PORT_INTERNAL, **kwargs)
 
     def send_data(self, data: bytes, timestamp: Optional[int]=None):
         return self._com.send_data(data, timestamp)
