@@ -2,3 +2,4 @@ tags
 build
 *.so
 __pycache__
+rtudp.egg-info
