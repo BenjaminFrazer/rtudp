@@ -1,18 +1,43 @@
 import time
 import os
+import sys
 import pprint
 import faulthandler
 faulthandler.enable()
-from rtudp import RtUdp
+from rtudp import create_rtudp
+
+# Configuration switch - set to True to use emulated implementation
+USE_EMULATED = False  # Set to True for emulated, False for socket
+
+# Allow command-line override: python test_rtudp.py emulated
+if len(sys.argv) > 1:
+    USE_EMULATED = sys.argv[1].lower() in ['emulated', 'emulate', 'emu', 'e', 'true', '1']
 
 REC_CAPACITY = 4000;
 
 if __name__ == "__main__":
+    
+    # Select implementation
+    implementation = "emulated" if USE_EMULATED else "socket"
+    print(f"Using {implementation.upper()} implementation")
+    print("-" * 40)
 
     pid = os.getpid()
     os.sched_setaffinity(pid, {0})
-    sender = RtUdp("127.0.64.5", 3043,  "127.0.128.133", 8974, cpu=3, capacity=1000000, direction=0)
-    reciever = RtUdp("127.0.128.133", 8974, "127.0.64.5", 3043, cpu=2, capacity=REC_CAPACITY, direction=1)
+    
+    # Create sender and receiver using factory
+    sender = create_rtudp(
+        implementation,
+        "127.0.64.5", 3043,  
+        "127.0.128.133", 8974, 
+        cpu=3, capacity=1000000, direction=0
+    )
+    reciever = create_rtudp(
+        implementation,
+        "127.0.128.133", 8974, 
+        "127.0.64.5", 3043, 
+        cpu=2, capacity=REC_CAPACITY, direction=1
+    )
     print(hash(sender))
     print(hash(reciever))
     sender.init_socket()
@@ -23,7 +48,7 @@ if __name__ == "__main__":
     reciever.start()
     time.sleep(0.1)
 
-    n_packets = 10000#00
+    n_packets = 1000000
     t_delta_ns = 20000
     margin = 1_000_000_0#00
     prev_id=0

@@ -795,7 +795,7 @@ static PyMethodDef RtUdp_methods[] = {
 };
 
 static PyTypeObject UDPSocketType = {
-    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "rtudp.RtUdp",
+    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "rtudp._RtUdpSocket",
     .tp_basicsize = sizeof(RtUdp),
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
     .tp_doc = "Custom UDP Socket type",
@@ -830,6 +830,6 @@ PyMODINIT_FUNC PyInit_rtudp(void) {
     return NULL;
 
   Py_INCREF(&UDPSocketType);
-  PyModule_AddObject(m, "RtUdp", (PyObject *)&UDPSocketType);
+  PyModule_AddObject(m, "_RtUdpSocket", (PyObject *)&UDPSocketType);
   return m;
 }
