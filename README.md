@@ -124,6 +124,31 @@ sender, receiver = create_rtudp_pair(
 )
 ```
 
+### Type Hinting
+
+For type annotations, use `RtUdpBase` or the `RtUdpType` alias:
+
+```python
+from rtudp import RtUdpBase, RtUdpType, create_rtudp
+from typing import List
+
+# Both of these are correct:
+def process_packets(connection: RtUdpBase) -> None:
+    """Process packets from any RtUDP implementation."""
+    data, timestamp = connection.receive_data(timeout_ns=1000000)
+    # ...
+
+def create_connections(count: int) -> List[RtUdpType]:
+    """Create multiple connections (using the type alias)."""
+    return [
+        create_rtudp("socket", "127.0.0.1", 5000+i, "127.0.0.2", 6000+i)
+        for i in range(count)
+    ]
+
+# The factory returns the base type
+conn: RtUdpBase = create_rtudp("emulated", "127.0.0.1", 5000, "127.0.0.2", 5001)
+```
+
 ## Architecture
 
 ### Dual Implementation Design
